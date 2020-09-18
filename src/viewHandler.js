@@ -68,9 +68,17 @@ const ViewHandler = (() => {
     let i = 0;
     AllProjects.getAllProjects().forEach(project => {
       if(project.isFavourite()) {
-        sideBarFavourites.innerHTML += `<li class="project-link" data-id="${i}"> ${project.getTitle()}</li>`;
+        if(i === currentDisplayedProject) {
+          sideBarFavourites.innerHTML += `<li class="project-link selected" data-id="${i}"> ${project.getTitle()}</li>`;
+        } else {
+          sideBarFavourites.innerHTML += `<li class="project-link" data-id="${i}"> ${project.getTitle()}</li>`;
+        }
       } else {
-        sideBarProjects.innerHTML += `<li class="project-link" data-id="${i}"> ${project.getTitle()}</li>`;
+        if(i === currentDisplayedProject) {
+          sideBarProjects.innerHTML += `<li class="project-link selected" data-id="${i}"> ${project.getTitle()}</li>`;  
+        } else {
+          sideBarProjects.innerHTML += `<li class="project-link" data-id="${i}"> ${project.getTitle()}</li>`;  
+        }
       }
       i++;
     });
@@ -79,7 +87,7 @@ const ViewHandler = (() => {
   }
 
   const displayProject = (projectID) => {
-    currentDisplayedProject = projectID;
+    currentDisplayedProject = +projectID;
 
     let project = AllProjects.getProject(projectID);
 
@@ -90,6 +98,7 @@ const ViewHandler = (() => {
     });
     display.innerHTML += `</ul>`;
 
+    updateSideBar();
     trackNewTaskButtons();
   }
 

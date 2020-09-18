@@ -75,7 +75,7 @@ header {
 
 aside {
   background-color: #f0f0f0;
-  padding: 10px 0 10px 0;
+  padding: 10px;
   margin-top: 40px;
 
   z-index: 1;
@@ -101,6 +101,15 @@ aside h5 {
   font-weight: bold;
   border-bottom: 1px solid #d6d6d6;
   margin: 10px 10px 10px 0;
+}
+
+.project-link {
+  transition: 0.2s;
+}
+
+.project-link.selected {
+  background: #e0e0e0;
+  border-radius: 10px;
 }
 
 
