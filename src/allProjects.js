@@ -1,7 +1,11 @@
 const AllProjects = (() => {
   let projects = [];
   const addProject = (project) => projects.push(project);
-  return {addProject};
+  const getAllProjects = () => projects;
+  const getProject = (projectID) => {
+    return projects[projectID];
+  };
+  return {addProject, getAllProjects, getProject};
 })();
 
 export {AllProjects};

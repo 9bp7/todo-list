@@ -52,14 +52,6 @@ header {
   MAIN AREA
 ***/
 
-main {
-  background: red;
-}
-
-main .wrap {
-  
-}
-
 .add-btn {
   border-radius: 20px;
   border: 1px solid #c5dbeb;
@@ -93,6 +85,10 @@ aside {
   bottom: 0;
   overflow-y: auto;
   width: 300px;
+}
+
+aside li {
+  cursor: pointer;
 }
 
 aside li,
@@ -136,6 +132,7 @@ aside h5 {
 .display-inner li {
   padding: 15px 0;
   border-bottom: 1px solid #ededed;
+  list-style: none;
 }
 
 .display-inner h3:not(:first-of-type) {
