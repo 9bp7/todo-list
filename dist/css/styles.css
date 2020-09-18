@@ -60,6 +60,25 @@ main .wrap {
   
 }
 
+.add-btn {
+  border-radius: 20px;
+  border: 1px solid #c5dbeb;
+  background-color: #d7efff;
+  font-size: 10px;
+  margin-left: 10px;
+  padding: 2px 10px;
+
+  transition: 0.2s;
+}
+
+.add-btn:hover {
+  filter: brightness(1.03);
+}
+
+.add-btn:active {
+  filter: brightness(0.97);
+}
+
 /* SIDEBAR */
 
 aside {
@@ -87,6 +106,10 @@ aside h5 {
   border-bottom: 1px solid #d6d6d6;
   margin: 10px 10px 10px 0;
 }
+
+
+
+/* MAIN DISPLAY AREA */
 
 .display {
   background-color: #fff;
@@ -123,26 +146,12 @@ aside h5 {
   margin-right: 10px;
 }
 
-.display-inner .add-task {
-  border-radius: 20px;
-  border: 1px solid #c5dbeb;
-  background-color: #d7efff;
-  font-size: 10px;
-  margin-left: 10px;
-  padding: 2px 10px;
+.display-inner .add-btn {
   position: relative;
   top: -3px;
-
-  transition: 0.2s;
 }
 
-.display-inner .add-task:hover {
-  filter: brightness(1.03);
-}
 
-.display-inner .add-task:active {
-  filter: brightness(0.97);
-}
 
 /*
 
