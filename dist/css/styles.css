@@ -152,6 +152,12 @@ aside h5 {
   padding: 15px 0;
   border-bottom: 1px solid #ededed;
   list-style: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.display-inner li:hover {
+  background-color: #f0f0f0;
 }
 
 .display-inner h3:not(:first-of-type) {
@@ -171,6 +177,14 @@ aside h5 {
   color: rgb(150, 150, 150);
   margin-top: 8px;
   font-size: 12px;
+}
+
+.todo-pri-med {
+  color: #b3831d;
+}
+
+.todo-pri-high {
+  color: #b3221d;
 }
 
 
