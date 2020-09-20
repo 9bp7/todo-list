@@ -1,3 +1,101 @@
+const AllModals = (() => {
+  let allModals = [];
+
+  const addModal = (modal) => {
+    allModals.push(modal);
+    return allModals.indexOf(modal);
+  };
+
+  const getModalIndex = (modal) => {
+    return allModals.indexOf(modal);
+  }
+
+  const hideAllOtherModals = (modalToKeep) => {
+    for(let i = 0; i < modalToKeep.length; i++) {
+      if(i !== modalToKeep) {
+        allModals[i].hide();
+        console.log(`hiding modalID: ${i}`)
+      } else {
+        console.log(`keeping modalID: ${i}`)
+      }
+    }
+  }
+
+  return {addModal, getModalIndex, hideAllOtherModals};
+})();
+
+const Modal = (modalTitle) => {
+  let modalContainer = document.createElement('div');
+  modalContainer.classList.add('modal-container');
+  document.querySelector('body').appendChild(modalContainer);
+
+  let modal = document.createElement('div');
+  modal.classList.add('modal');
+  modal.dataset.modalid = AllModals.addModal(modal);
+  const modalID = AllModals.getModalIndex(modal);
+  console.log(`${modalID} / ${modal.dataset.modalid}`)
+  document.querySelector('.modal-container').appendChild(modal);
+
+  if(modalTitle.length > 0) {
+    modal.innerHTML += `<h3>${modalTitle}</h3>`;
+  }
+
+  const show = () => {
+    AllModals.hideAllOtherModals(modalID);
+    modal.classList.add('show');
+    modalContainer.classList.add('show');
+  };
+
+  const hide = () => {
+    modal.classList.remove('show');
+    modalContainer.classList.remove('show');
+  };
+
+  const handleCloseModal = () => {
+    modalContainer.addEventListener('click', (e) => {
+      if(e.target.classList.contains('modal-container') || e.target.id === 'modal-close') {
+        hide();
+      } 
+    });
+  };
+
+  const createCloseButton = (() => {
+    modal.innerHTML += `<h3 id="modal-close">✕</h3>`;
+    handleCloseModal();
+  })();
+
+  return {modal, show, hide};
+}
+
+const ConfirmCancelModal = (modalTitle, modalContent, confirmFunction, cancelFunction, confirmBtnText, cancelBtnText, isWarning = false) => {
+  const prototype = Modal(modalTitle);
+  if(modalContent.length > 0) {
+    prototype.modal.innerHTML += `<p>${modalContent}</p>`;
+  }
+  if(!isWarning) {
+    prototype.modal.innerHTML += `<button data-modalbtn="confirm" class="modal-btn modal-confirm-btn">${confirmBtnText}</button>`;
+    prototype.modal.innerHTML += `<button data-modalbtn="cancel" class="modal-btn modal-cancel-btn">${cancelBtnText}</button>`;
+  } else {
+    prototype.modal.innerHTML += `<button data-modalbtn="confirm" class="modal-btn modal-confirm-btn-warn">${confirmBtnText}</button>`;
+    prototype.modal.innerHTML += `<button data-modalbtn="cancel" class="modal-btn modal-cancel-btn-warn">${cancelBtnText}</button>`;
+  }
+
+  const trackButtons = (() => {
+    let confirmBtn = prototype.modal.querySelector('button[data-modalbtn="confirm"]');
+    let cancelBtn = prototype.modal.querySelector('button[data-modalbtn="cancel"]');
+    confirmBtn.addEventListener('click', () => {
+      confirmFunction();
+      prototype.hide();
+    });
+    cancelBtn.addEventListener('click', () => {
+      cancelFunction();
+      prototype.hide();
+    });
+  })();
+  
+  return Object.assign({}, prototype, {});
+}
+
 /*const Modal = (modalTitle, modalID) => {
   let modalDiv = document.createElement('div');
   modalDiv.classList.add('modal');
@@ -322,10 +420,6 @@ const NewProjectModal = ((content) => {
 })();*/
 
 const AllModal = (modalTitle, modalID) => {
-  
-}
-
-const Modal = (modalTitle, modalID) => {
 
 }
 
@@ -341,4 +435,4 @@ const NewProjectModal = (modalTitle, modalID) => {
   
 }
 
-export {Modal, EditTaskModal, NewTaskModal, NewProjectModal};
+export {AllModals, Modal, ConfirmCancelModal, EditTaskModal, NewTaskModal, NewProjectModal};

@@ -2,7 +2,7 @@ import {ToDoItem} from "./task.js";
 import {Project} from "./project.js";
 import {AllProjects} from "./allProjects.js";
 import {ViewHandler} from "./viewHandler.js";
-import {Modal, NewTaskModal} from "./modals.js";
+import {AllModals, Modal, ConfirmCancelModal} from "./modals.js";
 
 let inboxProject = Project("Inbox", true);
 AllProjects.addProject(inboxProject);
@@ -20,6 +20,17 @@ let toDo5 = ToDoItem('Do another great thing', 'More info about this amazing thi
 inboxProject.addTask(toDo5);
 //ViewHandler.displayProject(0);
 
+//let modalTest = Modal('New Task');
+//let modalTest2 = Modal('Edit Task');
+function confirm() {
+  console.log('confirm')
+}
+function cancel() {
+  console.log('cancel');
+}
+
+let modalTest3 = ConfirmCancelModal('Delete Project', 'Do you really wish to delete this project?', confirm, cancel, "Delete Project", "Cancel", true);
+modalTest3.show();
 
 inboxProject = Project("Personal");
 AllProjects.addProject(inboxProject);

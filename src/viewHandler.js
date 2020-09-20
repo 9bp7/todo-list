@@ -27,7 +27,7 @@ const ViewHandler = (() => {
     let projectToDisplay = AllProjects.getProject(projectID);
 
     display.innerHTML += 
-      `<h3>${projectToDisplay.getTitle()}<button class="add-btn" data-btn="new-task" data-projectid=${projectID}>＋ Add Task</button></h3>`;
+      `<h3>${projectToDisplay.getTitle()}<button class="add-btn small-btn" data-btn="new-task" data-projectid=${projectID}>＋ Add Task</button><button class="add-btn delete-project-btn small-btn" data-btn="del-project" data-projectid=${projectID}><span class='btn-symbol'>✕</span> Delete Project</button></h3>`;
 
     let projectList = document.createElement('ul');
     let tasksToDisplay = projectToDisplay.getTasks();
