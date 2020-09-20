@@ -1,7 +1,7 @@
 import {ToDoItem} from "./task.js";
 import {Project} from "./project.js";
 import {AllProjects} from "./allProjects.js";
-import {Modal, AllModals, NewTaskModal, EditTaskModal, NewProjectModal} from "./modals.js";
+import {Modal, AllModals, ConfirmCancelModal, NewTaskModal, EditTaskModal, NewProjectModal} from "./modals.js";
 
 const ViewHandler = (() => {
   let allButtons = document.querySelectorAll("button");
@@ -26,8 +26,13 @@ const ViewHandler = (() => {
   const displayProject = (projectID) => {
     let projectToDisplay = AllProjects.getProject(projectID);
 
-    display.innerHTML += 
-      `<h3>${projectToDisplay.getTitle()}<button class="add-btn small-btn" data-btn="new-task" data-projectid=${projectID}>＋ Add Task</button><button class="add-btn delete-project-btn small-btn" data-btn="del-project" data-projectid=${projectID}><span class='btn-symbol'>✕</span> Delete Project</button></h3>`;
+    if(projectToDisplay.isFavourite()) {
+      display.innerHTML += 
+      `<h3>${projectToDisplay.getTitle()}<button class="add-btn small-btn" data-btn="new-task" data-projectid=${projectID}>＋ Add Task</button></h3>`;
+    } else {
+      display.innerHTML += 
+      `<h3>${projectToDisplay.getTitle()}<button class="add-btn small-btn" data-btn="new-task" data-projectid=${projectID}>＋ Add Task</button><button class="add-btn delete-project-btn small-btn" data-btn="del-project" data-projectid=${projectID}>Delete Project</button></h3>`;
+    }
 
     let projectList = document.createElement('ul');
     let tasksToDisplay = projectToDisplay.getTasks();
@@ -72,6 +77,7 @@ const ViewHandler = (() => {
     setCurrentView('one', [AllProjects.getProject(projectID)]);
     displayProject(projectID);
     handleTaskCheckboxes();
+    handleDeleteProjectButtons();
   }
 
   const displayAllProjects = () => {
@@ -83,6 +89,7 @@ const ViewHandler = (() => {
     }
 
     handleTaskCheckboxes();
+    handleDeleteProjectButtons();
   };
 
   const updateDisplay = () => {
@@ -209,6 +216,24 @@ const ViewHandler = (() => {
     showSideBarLinks();
     showSelectedSideBarLink();
     handleSideBarClicks();
+  }
+
+  const confirmDeleteProject = (project) => {
+    AllProjects.deleteProject(project);
+    displayAllProjects();    
+    updateSideBar();
+    
+  }
+
+  const handleDeleteProjectButtons = () => {
+    let deleteProjectBtns = display.querySelectorAll(`button[data-btn="del-project"]`);
+    deleteProjectBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        let project = AllProjects.getProject(+btn.dataset.projectid);
+        let myModal = ConfirmCancelModal('Delete Project', `Do you really wish to delete ${project.getTitle()}?`, () => confirmDeleteProject(project), null, "Delete Project", "Cancel", true);
+        myModal.show();
+      });
+    });
   }
 
   return {displayOneProject, displayAllProjects};

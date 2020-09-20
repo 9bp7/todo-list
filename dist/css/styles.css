@@ -95,8 +95,12 @@ header {
 }
 
 .delete-project-btn {
-  background-color: rgb(255, 196, 196);
-  border: 1px solid #dd8a88;
+  /*background-color: rgb(255, 196, 196);
+  border: 1px solid #dd8a88;*/
+  color: #ca2e2a;
+  background: none;
+  border: none;
+  margin-left: 2px;
 }
 
 

@@ -25,15 +25,16 @@ const AllModals = (() => {
 })();
 
 const Modal = (modalTitle) => {
-  let modalContainer = document.createElement('div');
-  modalContainer.classList.add('modal-container');
-  document.querySelector('body').appendChild(modalContainer);
-
   let modal = document.createElement('div');
   modal.classList.add('modal');
   modal.dataset.modalid = AllModals.addModal(modal);
   const modalID = AllModals.getModalIndex(modal);
-  console.log(`${modalID} / ${modal.dataset.modalid}`)
+
+  let modalContainer = document.createElement('div');
+  modalContainer.classList.add('modal-container');
+  modalContainer.dataset.modalid = modalID;
+
+  document.querySelector('body').appendChild(modalContainer);
   document.querySelector('.modal-container').appendChild(modal);
 
   if(modalTitle.length > 0) {
@@ -41,14 +42,15 @@ const Modal = (modalTitle) => {
   }
 
   const show = () => {
-    AllModals.hideAllOtherModals(modalID);
-    modal.classList.add('show');
+    modalContainer.appendChild(modal);
     modalContainer.classList.add('show');
+    modal.classList.add('show');
   };
 
   const hide = () => {
-    modal.classList.remove('show');
+    modalContainer.removeChild(modal);
     modalContainer.classList.remove('show');
+    modal.classList.remove('show');
   };
 
   const handleCloseModal = () => {
@@ -88,9 +90,12 @@ const ConfirmCancelModal = (modalTitle, modalContent, confirmFunction, cancelFun
       prototype.hide();
     });
     cancelBtn.addEventListener('click', () => {
-      cancelFunction();
+      if(cancelFunction !== null) {
+        cancelFunction();
+      }      
       prototype.hide();
     });
+    
   })();
   
   return Object.assign({}, prototype, {});

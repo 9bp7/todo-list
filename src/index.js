@@ -29,8 +29,8 @@ function cancel() {
   console.log('cancel');
 }
 
-let modalTest3 = ConfirmCancelModal('Delete Project', 'Do you really wish to delete this project?', confirm, cancel, "Delete Project", "Cancel", true);
-modalTest3.show();
+//let modalTest3 = ConfirmCancelModal('Delete Project', 'Do you really wish to delete this project?', confirm, cancel, "Delete Project", "Cancel", true);
+//modalTest3.show();
 
 inboxProject = Project("Personal");
 AllProjects.addProject(inboxProject);
