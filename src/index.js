@@ -2,7 +2,7 @@ import {ToDoItem} from "./task.js";
 import {Project} from "./project.js";
 import {AllProjects} from "./allProjects.js";
 import {ViewHandler} from "./viewHandler.js";
-import {AllModals, Modal, ConfirmCancelModal} from "./modals.js";
+import {AllModals, Modal, PopupModal, ConfirmCancelModal, FormModal} from "./modals.js";
 
 let inboxProject = Project("Inbox", true);
 AllProjects.addProject(inboxProject);
@@ -20,14 +20,46 @@ let toDo5 = ToDoItem('Do another great thing', 'More info about this amazing thi
 inboxProject.addTask(toDo5);
 //ViewHandler.displayProject(0);
 
+
+
+
 //let modalTest = Modal('New Task');
 //let modalTest2 = Modal('Edit Task');
-function confirm() {
-  console.log('confirm')
+let myFormModal = FormModal('New Task', addTask, null, 'Add Task', 'Cancel');
+
+function addTask(formData) {
+  for (let pair of formData.entries()) {
+    console.log(pair[0] + ': ' + pair[1]);
+    if(pair[0] === 'modifytask-name') {
+      if(pair[1].length === 0) {
+        myFormModal.addErrorLabel('You need to enter a task name!', pair[0]);
+      } else {
+        myFormModal.removeErrorLabel(pair[0]);
+      }      
+    }
+  }
 }
+
 function cancel() {
   console.log('cancel');
 }
+
+let newTaskHTML =
+  `<input type="text" id="modifytask-name" name="modifytask-name" placeholder="Task name" tabindex="0">
+    <input type="text" id="modifytask-desc" name="modifytask-desc" placeholder="Description"> 
+    <label for="modifytask-duedate">Due date (optional):</label>   
+    <input type="date" id="modifytask-duedate" name="modifytask-duedate">
+    <label for="modifytask-duedate">Priority:</label>   
+    <select id="modifytask-priority" name="modifytask-priority">
+      <option value="low">Low</option>
+      <option value="med">Medium</option>
+      <option value="high">High</option>
+    </select>
+    <textarea id="modifytask-notes" name="modifytask-notes" rows="3" placeholder="Add additional notes here"></textarea>`;
+
+
+myFormModal.addFormHTML(newTaskHTML);
+myFormModal.show();
 
 //let modalTest3 = ConfirmCancelModal('Delete Project', 'Do you really wish to delete this project?', confirm, cancel, "Delete Project", "Cancel", true);
 //modalTest3.show();

@@ -103,6 +103,14 @@ header {
   margin-left: 2px;
 }
 
+.delete-project-btn:hover {
+  text-decoration: underline;
+}
+
+.delete-project-btn:active {
+  box-shadow: none;
+}
+
 
 /* SIDEBAR */
 
@@ -118,6 +126,8 @@ aside {
   bottom: 0;
   overflow-y: auto;
   width: 300px;
+
+  border-right: 1px solid #e3e3e3;
 }
 
 aside li {
@@ -145,23 +155,32 @@ aside h5 {
   border-radius: 10px;
 }
 
+.sidebar-projects {
+  margin-bottom: 20px;
+}
+
 
 
 /* ADD PROJECT */
 
 .add-project {
   margin: 10px 0;
-  height: 35px;
+  height: 36px;
 }
 
 .add-project form {
   height: 100%;
+  padding: 0 0 0 1px;
 }
 
 .add-project input[type="text"] {
-  padding: 5px;
+  padding: 5px 5px 6px 10px;
   width: 86%;
   height: 100%;
+  background: #e0e0e0;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0px -2px 7px -7px #4d4c4c inset;
 }
 
 .add-project input[type="submit"] {
@@ -198,6 +217,7 @@ aside h5 {
 .display-inner {
   padding: 20px;
   position: relative;
+  border-right: 1px solid #e3e3e3;
 }
 
 .display-inner h3 {
@@ -272,6 +292,18 @@ aside h5 {
   z-index: 15;
 
   display: none;
+  background: rgba(0, 0, 0, 0.5);
+
+  animation: fadeIn 0.1s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .modal {
@@ -279,32 +311,38 @@ aside h5 {
   top: 80px;
   z-index: 10;
   width: 400px;
-  left: 50%;
-  right: 50%;
-  margin-left: -150px;
   padding: 20px;
   z-index: 16;
 
   display: none;
 
   background-color: #f7f7f7;
+  background: linear-gradient(to bottom, #f7f7f7, #f0efef);
   border: 1px solid #f1f1f1;
   border-radius: 20px;
-  box-shadow: 0px 0px 5px 0px #aaa6a6;
+  box-shadow: 0px 0px 5px 0px #3c3a3a;
 }
 
-.modal.show,
 .modal-container.show {
+  display: flex;
+  justify-content: center;
+}
+
+.modal.show {
   display: block;
 }
 
 .modal h3 {
   font-size: 14px;
-  margin-bottom: 15px;
 }
 
 .modal p {
   font-size: 12px;
+  line-height: 1.5;
+}
+
+.modal p:not(:last-child),
+.modal h3:not(:last-child) {
   margin-bottom: 15px;
 }
 
@@ -312,31 +350,43 @@ aside h5 {
   font-size: 12px;
   padding: 5px 15px;
   margin-right: 5px;
-  border: 1px solid #aaa6a6;
   border-radius: 20px;
+  border: none;
   background-color: #e0e0e0;
+
+  transition: 0.2s;
+}
+
+.modal-btn:hover {
+  filter: brightness(1.1);
+}
+
+.modal-btn:active {
+  filter: brightness(0.9);
+  box-shadow: 0px -2px 4px -2px #595959 inset;
 }
 
 .modal .modal-confirm-btn {
   background-color: var(--main-color);
   color: #fff;
-  border: 2px solid #fff;
 }
 
 .modal .modal-cancel-btn {
+  background-color: #ccc;
+}
 
+.modal .modal-cancel-btn:hover {
+  filter: brightness(1.04);
 }
 
 .modal .modal-confirm-btn-warn {
   background-color: #a30e0c;
   color: #fff;
-  border: 2px solid #fff;
 }
 
 .modal .modal-cancel-btn-warn {
   background-color: var(--main-color);
   color: #fff;
-  border: 2px solid #fff;
 }
 
 #modal-close {
@@ -346,6 +396,43 @@ aside h5 {
   padding: 10px;
   color: #101e5f;
   cursor: pointer;
+  user-select: none;
+}
+
+.modal input,
+.modal label,
+.modal p,
+.modal textarea,
+.modal select {
+  display: block;
+  margin: 10px 0;
+  font-size: 12px;
+}
+
+.modal input[type="text"],
+.modal input[type="date"],
+.modal textarea {
+  background-color: #fff;
+  box-shadow: 0px -2px 7px -7px #9f9f9f inset;
+  border: none;
+  border: 1px solid #eaeaea;
+  border-radius: 5px;
+  padding: 5px;
+  width: 100%;
+}
+
+.modal input[type="submit"] {
+  display: inline-block;
+  margin: 0 5px 0 0;
+}
+
+.modal p.modal-error {
+  color: rgb(145, 34, 34);
+  font-size: 10px;
+  font-weight: normal;
+  margin-top: -5px;
+  margin-left: 3px;
+  margin-bottom: -2px;
 }
 
 /* TASK MODAL 

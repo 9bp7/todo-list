@@ -38,19 +38,19 @@ const Modal = (modalTitle) => {
   document.querySelector('.modal-container').appendChild(modal);
 
   if(modalTitle.length > 0) {
-    modal.innerHTML += `<h3>${modalTitle}</h3>`;
+    modal.innerHTML += `<h3 id="modal-title">${modalTitle}</h3>`;
   }
 
   const show = () => {
-    modalContainer.appendChild(modal);
     modalContainer.classList.add('show');
     modal.classList.add('show');
+    document.querySelector('body').appendChild(modalContainer);
   };
 
   const hide = () => {
-    modalContainer.removeChild(modal);
     modalContainer.classList.remove('show');
     modal.classList.remove('show');
+    modalContainer.remove();
   };
 
   const handleCloseModal = () => {
@@ -100,6 +100,155 @@ const ConfirmCancelModal = (modalTitle, modalContent, confirmFunction, cancelFun
   
   return Object.assign({}, prototype, {});
 }
+
+const PopupModal = (modalTitle, modalContent, okBtnText = "", okBtnFunction = null) => {
+  const prototype = Modal(modalTitle);
+  if(modalContent.length > 0) {
+    prototype.modal.innerHTML += `<p>${modalContent}</p>`;
+  }
+
+  if(okBtnText.length > 0) {
+    prototype.modal.innerHTML += `<button data-modalbtn="ok" class="modal-btn modal-confirm-btn">${okBtnText}</button>`;
+  }
+
+  const trackButtons = (() => {
+    if(okBtnText.length > 0) {
+      let okBtn = prototype.modal.querySelector('button[data-modalbtn="ok"]');
+
+      okBtn.addEventListener('click', () => {
+        if(okBtnFunction !== null) {
+          okBtnFunction();
+        }
+        prototype.hide();
+      });
+    }    
+  })();
+  
+  return Object.assign({}, prototype, {});
+}
+
+const FormModal = (modalTitle, submitFunction, cancelFunction, submitBtnText, cancelBtnText) => {
+  const prototype = Modal(modalTitle);
+
+  let initialHTML = `<form autocomplete="off">`;
+  initialHTML += `<input type="submit" data-modalbtn="submit" class="modal-btn modal-confirm-btn" value="${submitBtnText}">`;
+  if(cancelBtnText.length > 0) {
+    initialHTML += `<button data-modalbtn="cancel" class="modal-btn modal-cancel-btn">${cancelBtnText}</button>`;
+  } 
+  initialHTML += `</form>`;
+  prototype.modal.innerHTML += initialHTML;
+
+
+  const trackButtons = () => {
+    //let submitBtn = prototype.modal.querySelector('button[data-modalbtn="submit"]');
+    let form = prototype.modal.querySelector('form');
+    if(form) {
+      console.log('form exists')
+      form.addEventListener('submit', e => {
+        console.log('submitted form');
+        e.preventDefault();
+        let formData = new FormData(form);
+        submitFunction(formData);
+      });
+    }    
+
+    if(cancelBtnText.length > 0) {
+      let cancelBtn = prototype.modal.querySelector('button[data-modalbtn="cancel"]');
+      cancelBtn.addEventListener('click', () => {
+        if(cancelFunction !== null) {
+          cancelFunction();
+        }
+        prototype.hide();
+      });
+    }   
+  };
+
+  const focusFirstElement = () => {
+    let firstInputElement = prototype.modal.querySelector('input');
+    firstInputElement.focus();
+  }
+
+  const show = () => {
+    prototype.show();
+    focusFirstElement();
+  }
+  
+  const addFormHTML = (formHTML) => {
+    let form = prototype.modal.querySelector('form');
+    form.innerHTML = formHTML + form.innerHTML;
+
+
+    /*let modalTitle = prototype.modal.querySelector('h3[id="modal-title"]');
+    let copyModalTitle = modalTitle;
+    modalTitle.remove();
+    prototype.modal.innerHTML = copyModalTitle.innerHTML + 
+                                innerHTML + 
+                                prototype.modal.innerHTML;*/
+    trackButtons();
+  }
+
+  const addErrorLabel = (errorText, inputID) => {
+    let form = prototype.modal.querySelector('form');
+    if(!form.querySelector(`p[data-error="${inputID}"]`)) {
+      let elementPosition = form.querySelector(`#${inputID}`);
+      let errorElement = document.createElement('p');
+      errorElement.classList.add('modal-error');
+      errorElement.dataset.error = inputID;
+      errorElement.textContent = errorText;
+      form.insertBefore(errorElement, elementPosition.nextSibling);
+    }
+  }
+
+  const removeErrorLabel = (inputID) => {
+    let labelToRemove = prototype.modal.querySelector(`p[data-error="${inputID}"]`);
+    if(labelToRemove) {
+      labelToRemove.remove();
+    }
+  }
+
+  trackButtons();
+  
+  return Object.assign({}, prototype, {show, addFormHTML, addErrorLabel, removeErrorLabel});
+}
+
+/*
+
+    <input type="text" id="modifytask-name" name="modifytask-name" placeholder="Task name">
+    <input type="text" id="modifytask-desc" name="modifytask-desc" placeholder="Description"> 
+    <label for="modifytask-duedate">Due date (optional):</labe>   
+    <input type="date" id="modifytask-duedate" name="modifytask-duedate">
+    <select id="modifytask-priority" name="modifytask-priority">
+      <option value="low">low</option>
+      <option value="med">med</option>
+      <option value="high">high</option>
+    </select>
+    <textarea id="modifytask-notes" name="modifytask-notes" rows="3" placeholder="Add additional notes here"></textarea>
+
+      `<input type="text" id="newtask-name" name="newtask-name" placeholder="Task Name (e.g. eat cereals)" tabindex="0">
+      <input type="text" id="newtask-desc"name="newtask-desc" placeholder="Description">
+      <label for="newtask-addDueDateCheck" class="inlineblock">Add due date?</label>
+      <input type="checkbox" data-check="duedate" id="newtask-dueDateCheck" name="newtask-addDueDateCheck">
+      <input type="date" data-check="duedate" id="newtask-dueDate" class="hide" name="newtask-dueDate">
+      
+      <fieldset class="modal-priority">
+        <p class="inlineblock">Priority:</p>
+        <label for="newtask-lowPriority" class="inlineblock">Low</label>
+        <input type="radio" id="newtask-lowPriority" name="newtask-priority" checked>
+        <label for="newtask-medPriority" class="inlineblock">Medium</label>
+        <input type="radio" id="newtask-medPriority" name="newtask-priority">
+        <label for="newtask-highPriority" class="inlineblock">High</label>
+        <input type="radio" id="newtask-highPriority" name="newtask-priority">
+      </fieldset>
+      
+      <textarea id="newtask-notes" name="newtask-notes"
+                rows="3" placeholder="Add additional notes here"></textarea>
+      
+      <label for="newtask-addChecklistCheck"  class="inlineblock">Add checklist?</label>
+      <input type="checkbox" data-check="checklist" id="newtask-checklistCheck" name="newtask-addChecklistCheck">
+      <input type="text" data-check="checklist" id="newtask-checklist" class="hide" name="newtask-checklist">
+
+      <input type="submit" value="Add Task"></input>`;
+*/
 
 /*const Modal = (modalTitle, modalID) => {
   let modalDiv = document.createElement('div');
@@ -424,20 +573,4 @@ const NewProjectModal = ((content) => {
   
 })();*/
 
-const AllModal = (modalTitle, modalID) => {
-
-}
-
-const EditTaskModal = (modalTitle, modalID) => {
-  
-}
-
-const NewTaskModal = (modalTitle, modalID) => {
-  
-}
-
-const NewProjectModal = (modalTitle, modalID) => {
-  
-}
-
-export {AllModals, Modal, ConfirmCancelModal, EditTaskModal, NewTaskModal, NewProjectModal};
+export {AllModals, Modal, PopupModal, FormModal, ConfirmCancelModal};

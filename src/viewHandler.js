@@ -132,14 +132,6 @@ const ViewHandler = (() => {
   const showSideBarLinks = () => {
     let allProjects = AllProjects.getAllProjects();
     let newProjectButtons = document.querySelectorAll('button[data-btn="new-project"]');
-      
-    if(addingProject) {
-      newProjectButtons.forEach(button => button.innerHTML = "<span class='btn-symbol'>✕</span> Cancel")
-      sideBarProjects.innerHTML += 
-        `<div class="add-project"><form class="add-project-form"><input type="text" class="add-project-field" placeholder="Name your project"><input type="submit" class="add-project-submit" value="＋"></form></div>`;
-    } else {
-      newProjectButtons.forEach(button => button.innerHTML = "<span class='btn-symbol'>＋</span> New Project")
-    }
     
     let i = 0;
     allProjects.forEach(project => {
@@ -155,6 +147,15 @@ const ViewHandler = (() => {
 
     sideBarFavourites.innerHTML += 
       `<li class="project-link" data-id="all-tasks">All Tasks</li>`;
+
+
+    if(addingProject) {
+      newProjectButtons.forEach(button => button.innerHTML = "<span class='btn-symbol'>✕</span> Cancel")
+      sideBarProjects.innerHTML += 
+        `<div class="add-project"><form class="add-project-form"><input type="text" class="add-project-field" placeholder="Name your project"><input type="submit" class="add-project-submit" value="＋"></form></div>`;
+    } else {
+      newProjectButtons.forEach(button => button.innerHTML = "<span class='btn-symbol'>＋</span> New Project")
+    }
   }
 
   const showSelectedSideBarLink = () => {
@@ -177,6 +178,8 @@ const ViewHandler = (() => {
         } else {
           ViewHandler.displayOneProject(+link.dataset.id);
         }
+        addingProject = false;
+        updateSideBar();
       });
     });
   }
@@ -230,7 +233,7 @@ const ViewHandler = (() => {
     deleteProjectBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         let project = AllProjects.getProject(+btn.dataset.projectid);
-        let myModal = ConfirmCancelModal('Delete Project', `Do you really wish to delete ${project.getTitle()}?`, () => confirmDeleteProject(project), null, "Delete Project", "Cancel", true);
+        let myModal = ConfirmCancelModal(`Delete ${project.getTitle()}`, `Do you really wish to permanently delete your project '${project.getTitle()}'?`, () => confirmDeleteProject(project), null, "Delete Project", "Cancel", true);
         myModal.show();
       });
     });
