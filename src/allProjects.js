@@ -5,7 +5,9 @@ const AllProjects = (() => {
   const getProject = (projectID) => {
     return projects[projectID];
   };
-  return {addProject, getAllProjects, getProject};
+  const getProjectCount = () => projects.length;
+  const getProjectIndex = (project) => projects.indexOf(project);
+  return {addProject, getAllProjects, getProject, getProjectCount, getProjectIndex};
 })();
 
 export {AllProjects};

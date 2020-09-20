@@ -1,4 +1,4 @@
-const Modal = (modalTitle, modalID) => {
+/*const Modal = (modalTitle, modalID) => {
   let modalDiv = document.createElement('div');
   modalDiv.classList.add('modal');
   modalDiv.dataset.modalid = modalID;
@@ -319,6 +319,26 @@ const EditTaskModal = ((content) => {
 
 const NewProjectModal = ((content) => {
   
-})();
+})();*/
+
+const AllModal = (modalTitle, modalID) => {
+  
+}
+
+const Modal = (modalTitle, modalID) => {
+
+}
+
+const EditTaskModal = (modalTitle, modalID) => {
+  
+}
+
+const NewTaskModal = (modalTitle, modalID) => {
+  
+}
+
+const NewProjectModal = (modalTitle, modalID) => {
+  
+}
 
 export {Modal, EditTaskModal, NewTaskModal, NewProjectModal};

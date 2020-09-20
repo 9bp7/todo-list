@@ -5,31 +5,218 @@ import {Modal, AllModals, NewTaskModal, EditTaskModal, NewProjectModal} from "./
 
 const ViewHandler = (() => {
   let allButtons = document.querySelectorAll("button");
+  let sideBar = document.querySelector('aside');
   let sideBarFavourites = document.querySelector(".sidebar-favourites");
   let sideBarProjects = document.querySelector(".sidebar-projects");
   let display = document.querySelector(".display-inner");
-  let currentDisplayedProject = 0;
-  let currentInteractedProject = 0;
+  let taskCheckboxEventListeners = [];
+  let addingProject = false;
+  let currentView = {type: "",
+                     projects: []};
 
-  const addNewTask = () => {
-
+  const setCurrentView = (type, projects) => {
+    currentView.type = type;
+    currentView.projects = projects;
   }
 
-  const trackNewProjectButtons = () => {
-    allButtons.forEach(button => {
-      if(button.dataset.btn === "new-project") {
-        button.addEventListener('click', () => {
-          let projectTitle = "";
-          do {
-            projectTitle = prompt("Name of project: ");
-          } while(projectTitle === "" || projectTitle === null);
-          let newProject = Project(projectTitle);
-          AllProjects.addProject(newProject);
-          updateSideBar();
-        });
+  const clearDisplay = () => {
+    display.innerHTML = "";
+  }
+  
+  const displayProject = (projectID) => {
+    let projectToDisplay = AllProjects.getProject(projectID);
+
+    display.innerHTML += 
+      `<h3>${projectToDisplay.getTitle()}<button class="add-btn" data-btn="new-task" data-projectid=${projectID}>＋ Add Task</button></h3>`;
+
+    let projectList = document.createElement('ul');
+    let tasksToDisplay = projectToDisplay.getTasks();
+
+    tasksToDisplay.sort(function(x, y) {
+      return (x.getComplete() === y.getComplete())? 0 : x.getComplete()? 1 : -1;
+    });
+
+    for(let i = 0; i < tasksToDisplay.length; i++) {
+      let individualTask = document.createElement('li');
+      individualTask.dataset.projectindex = i;
+      individualTask.dataset.projectid = projectID;
+      if(tasksToDisplay[i].getComplete()) {
+        individualTask.classList.add('todo-complete');
       }
-    })
+
+      individualTask.innerHTML += 
+        `<input class="todo-tick" type="checkbox" ${tasksToDisplay[i].getComplete() ? 'checked' : ''}><span class="todo-pri-${tasksToDisplay[i].getPriority()}">${tasksToDisplay[i].getTitle()}</span>`
+
+      if(!tasksToDisplay[i].getComplete()) {
+        if(tasksToDisplay[i].getDescription() !== "") {
+          individualTask.innerHTML += 
+            `<p class="todo-desc">${tasksToDisplay[i].getDescription()}</p>`;
+        }
+  
+        if(tasksToDisplay[i].getDueDate() !== "" && tasksToDisplay[i].getDueDate() !== null) {
+          individualTask.innerHTML += 
+            `<p class="todo-desc">Due on ${tasksToDisplay[i].getDueDate()}</p>`;
+        }
+      } 
+
+      projectList.appendChild(individualTask);
+    }
+
+    display.appendChild(projectList);
+
+    updateSideBar();
   };
+
+  const displayOneProject = (projectID) => {
+    clearDisplay();
+    setCurrentView('one', [AllProjects.getProject(projectID)]);
+    displayProject(projectID);
+    handleTaskCheckboxes();
+  }
+
+  const displayAllProjects = () => {
+    clearDisplay();
+    setCurrentView('all', AllProjects.getAllProjects());
+
+    for(let i = 0; i < AllProjects.getProjectCount(); i++) {
+      displayProject(i);
+    }
+
+    handleTaskCheckboxes();
+  };
+
+  const updateDisplay = () => {
+    if(currentView.type === 'all') {
+      displayAllProjects();
+    } else if (currentView.type === 'one') {
+      displayOneProject(AllProjects.getProjectIndex(currentView.projects[0]));
+    }
+  }
+
+  const handleTaskCheckboxes = () => {
+    let allTaskListItems = display.querySelectorAll('li');
+
+    allTaskListItems.forEach(listItem => {
+      listItem.childNodes.forEach(childNode => {
+        if(childNode.tagName === 'INPUT' && childNode.type === 'checkbox') {
+          if(taskCheckboxEventListeners.indexOf(childNode) === -1 ){
+            taskCheckboxEventListeners.push(childNode);
+            childNode.addEventListener('CheckboxStateChange', () => {
+              console.log('toggling completion task id ' + listItem.dataset.projectindex);
+
+              let project = AllProjects.getProject(listItem.dataset.projectid);
+              let taskToToggleCompletion = project.getTask(listItem.dataset.projectindex);
+              taskToToggleCompletion.setComplete(childNode.checked);
+              updateDisplay();
+            });
+          } else {
+            console.log(`event exists for ${listItem.textContent}`);
+          }
+        }
+      });
+    });
+  }
+
+  const clearSideBar = () => {
+    sideBarFavourites.innerHTML = "";
+    sideBarProjects.innerHTML = "";
+  }
+
+  const showSideBarLinks = () => {
+    let allProjects = AllProjects.getAllProjects();
+    let newProjectButtons = document.querySelectorAll('button[data-btn="new-project"]');
+      
+    if(addingProject) {
+      newProjectButtons.forEach(button => button.innerHTML = "<span class='btn-symbol'>✕</span> Cancel")
+      sideBarProjects.innerHTML += 
+        `<div class="add-project"><form class="add-project-form"><input type="text" class="add-project-field" placeholder="Name your project"><input type="submit" class="add-project-submit" value="＋"></form></div>`;
+    } else {
+      newProjectButtons.forEach(button => button.innerHTML = "<span class='btn-symbol'>＋</span> New Project")
+    }
+    
+    let i = 0;
+    allProjects.forEach(project => {
+      if(project.isFavourite()) {
+        sideBarFavourites.innerHTML += 
+          `<li class="project-link" data-id=${i}>${project.getTitle()}</li>`
+      } else {
+        sideBarProjects.innerHTML += 
+          `<li class="project-link" data-id=${i}>${project.getTitle()}</li>`
+      }
+      i++;
+    });
+
+    sideBarFavourites.innerHTML += 
+      `<li class="project-link" data-id="all-tasks">All Tasks</li>`;
+  }
+
+  const showSelectedSideBarLink = () => {
+    if(currentView.type === 'all') {
+      let sideBarAllTasks = sideBarFavourites.querySelector('li[data-id="all-tasks"]');
+      sideBarAllTasks.classList.add('selected');
+    } else if (currentView.type === 'one') {
+      let currentProjectIndex = AllProjects.getProjectIndex(currentView.projects[0]);
+      let sideBarCurrentTask = sideBar.querySelector(`li[data-id="${currentProjectIndex}"]`);
+      sideBarCurrentTask.classList.add('selected');
+    }
+  }
+
+  const handleSideBarClicks = () => {
+    let sideBarLinks = sideBar.querySelectorAll('li');
+    sideBarLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if(link.dataset.id === 'all-tasks') {
+          ViewHandler.displayAllProjects();
+        } else {
+          ViewHandler.displayOneProject(+link.dataset.id);
+        }
+      });
+    });
+  }
+
+  const handleNewProjectClick = (() => {
+    let newProjectButtons = document.querySelectorAll('button[data-btn="new-project"]');
+    newProjectButtons.forEach(link => {
+      link.addEventListener('click', () => {
+        addingProject = !addingProject;
+        updateSideBar(false);  
+        if(addingProject) {
+          document.querySelector('.add-project-field').focus();
+          handleNewProjectSubmit();
+        }              
+      });
+    });    
+  })();
+
+  const handleNewProjectSubmit = () => {
+    let newProjectForm = document.querySelector('.add-project-form');
+    let newProjectField = document.querySelector('.add-project-field');
+
+    newProjectForm.addEventListener('submit', e => {
+      e.preventDefault();
+      if(newProjectField.value !== '') {
+        let newProject = Project(newProjectField.value);
+        AllProjects.addProject(newProject);
+        addingProject = false;
+        ViewHandler.displayOneProject(AllProjects.getProjectIndex(newProject));
+        updateSideBar();        
+      }
+    });
+  }
+
+  const updateSideBar = (doHandleNewProjectClick = true) => {
+    clearSideBar();
+    showSideBarLinks();
+    showSelectedSideBarLink();
+    handleSideBarClicks();
+  }
+
+  return {displayOneProject, displayAllProjects};
+
+  
+
+
+  /*
 
   const doNewTaskSubmit = () => {
     let allValues = NewTaskModal.getAllValues();
@@ -140,7 +327,7 @@ const ViewHandler = (() => {
         EditTaskModal.populateForm(toPopulateWith);
         EditTaskModal.trackSubmit(() => {doEditTaskSubmit(thisTask)});
       });
-    });*/
+    });
   };
 
   const trackSideBarTabs = () => {
@@ -217,6 +404,7 @@ const ViewHandler = (() => {
   }
 
   return {trackNewProjectButtons, updateSideBar, displayProject};
+  */
 })();
 
 export {ViewHandler};
