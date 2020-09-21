@@ -32,6 +32,9 @@ const ViewHandler = (() => {
   let editTaskModal;
   let editTaskProjectID = 0;
   let editTaskProjectIndex = 0;
+  let moveTaskModal;
+  let moveTaskProjectID = 0;
+  let moveTaskTaskID = 0;
 
   const setCurrentView = (type, projects) => {
     currentView.type = type;
@@ -159,6 +162,55 @@ const ViewHandler = (() => {
     });
   }
 
+  const handleMoveTaskSubmit = (formData) => {
+    let formObjects = {};
+    for (let pair of formData.entries()) {
+      formObjects[pair[0]] = pair[1];
+    }
+
+    console.log(`from ${moveTaskProjectID} to ${formObjects['movetask-to']}`);
+    let projectFrom = AllProjects.getProject(moveTaskProjectID);
+    let projectTo = AllProjects.getProject(+formObjects['movetask-to']);
+    let task = projectFrom.getTask(moveTaskTaskID);
+    projectTo.addTask(task);
+    projectFrom.deleteTask(task);
+
+    updateDisplay();
+    moveTaskModal.hide();
+  }
+
+  moveTaskModal = FormModal('Move Task', handleMoveTaskSubmit, null, 'Move Task', 'Cancel');
+
+  const handleMoveTaskClick = () => {
+    let allTaskListItems = document.querySelectorAll('li');
+    allTaskListItems.forEach(listItem => {
+      if(listItem.querySelector('span[data-btn="move-task"]')) {
+        listItem.querySelector('span[data-btn="move-task"]').addEventListener('click', () => {
+          moveTaskProjectID = +listItem.dataset.projectid;
+          moveTaskTaskID = +listItem.dataset.projectindex;
+          let containingProject = AllProjects.getProject(moveTaskProjectID);
+          let taskToEdit = containingProject.getTask(moveTaskTaskID);
+
+          let moveTaskModalHTML =
+            `<label for="movetask-to">Move '${taskToEdit.getTitle()}' to which project?</label>   
+            <select id="movetask-to" name="movetask-to">`
+
+          AllProjects.getAllProjects().forEach(project => {
+            let projectIndex = AllProjects.getProjectIndex(project);
+            if(projectIndex !== moveTaskProjectID) {
+              moveTaskModalHTML += `<option value="${projectIndex}">${project.getTitle()}</option>`;
+            }
+          });
+
+          moveTaskModalHTML += `</select>`;
+
+          moveTaskModal.addFormHTML(moveTaskModalHTML);
+          moveTaskModal.show();
+        });
+      }      
+    });
+  }
+
   const clearDisplay = () => {
     display.innerHTML = "";
   }
@@ -230,6 +282,7 @@ const ViewHandler = (() => {
     handleNewTaskClick();
     handleEditTaskClick();
     handleDeleteTaskClick();
+    handleMoveTaskClick();
     AllProjects.save();
   }
 
@@ -246,6 +299,7 @@ const ViewHandler = (() => {
     handleNewTaskClick();
     handleEditTaskClick();
     handleDeleteTaskClick();
+    handleMoveTaskClick();
     AllProjects.save();
   };
 
