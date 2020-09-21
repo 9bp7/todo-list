@@ -54,7 +54,7 @@ textarea {
 
 header {
   color: #fff;
-  background-color: var(--main-color);
+  background: linear-gradient(#3366c8, #0354b0);
   font-weight: bold;
 
   position: fixed;
@@ -75,8 +75,9 @@ header {
 
 .small-btn {
   border-radius: 20px;
-  border: 1px solid #c5dbeb;
-  background-color: #d7efff;
+  border: none;
+  background-color: #248eff;
+  color: #fff;
   font-size: 10px;
   margin-left: 10px;
   padding: 2px 10px;
@@ -86,11 +87,11 @@ header {
 }
 
 .small-btn:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.1);
 }
 
 .small-btn:active {
-  filter: brightness(0.97);
+  filter: brightness(0.9);
   box-shadow: 0px -1px 4px -2px #aaa6a6 inset;
 }
 
@@ -201,7 +202,17 @@ aside h5 {
   border: none;
   border-radius: 20px;
   color: #fff;
-  background-color: var(--main-color);
+  background-color: #248eff;
+  transition: 0.2s;
+}
+
+.add-project input[type="submit"]:hover {
+  filter: brightness(1.1);
+}
+
+.add-project input[type="submit"]:active {
+  filter: brightness(0.9);
+  box-shadow: 0px -1px 4px -2px #666262 inset;
 }
 
 .btn-symbol {
@@ -406,6 +417,11 @@ aside h5 {
 .modal h3:not(:last-child) {
   margin-bottom: 15px;
 }
+
+.modal p[class="modal-error"]:last-of-type {
+  margin-bottom: 15px;
+}
+
 
 .modal-btn {
   font-size: 12px;

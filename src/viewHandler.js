@@ -35,10 +35,54 @@ const ViewHandler = (() => {
   let moveTaskModal;
   let moveTaskProjectID = 0;
   let moveTaskTaskID = 0;
+  let renameProjectModal;
+  let renameProjectProjectID = 0;
 
   const setCurrentView = (type, projects) => {
     currentView.type = type;
     currentView.projects = projects;
+  }
+
+  const handleRenameProjectSubmit = (formData) => {
+    let errors = false;
+    let formObjects = {};
+    for (let pair of formData.entries()) {
+      if(pair[0] === 'rename-project-name') {
+        if(pair[1].length === 0) {
+          renameProjectModal.addErrorLabel('You need to enter a new name!', pair[0]);
+          errors = true;
+        } else {
+          renameProjectModal.removeErrorLabel(pair[0]);
+        }      
+      }
+      formObjects[pair[0]] = pair[1];
+    }
+
+    if(!errors) {
+      let projectToRename = AllProjects.getProject(renameProjectProjectID);
+      projectToRename.setTitle(formObjects['rename-project-name']);
+      updateDisplay();
+      renameProjectModal.hide();
+    }
+  }
+
+  renameProjectModal = FormModal('Rename Project', handleRenameProjectSubmit, null, 'Rename Project', 'Cancel');
+
+  const handleRenameProjectButtons = () => {
+    let renameProjectButtons = display.querySelectorAll(`button[data-btn="rename-project"]`);
+    renameProjectButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        renameProjectProjectID = +btn.dataset.projectid;
+        let project = AllProjects.getProject(renameProjectProjectID);
+
+        let renameProjectModalHTML =
+          `<label for="rename-project-name">What would you like to rename '${project.getTitle()}'?</label> 
+          <input type="text" id="rename-project-name" name="rename-project-name" placeholder="New project title" value="" tabindex="0">`;
+          
+        renameProjectModal.addFormHTML(renameProjectModalHTML);
+        renameProjectModal.show();
+      });
+    });
   }
 
   const handleNewTaskSubmit = (formData) => {
@@ -222,7 +266,7 @@ const ViewHandler = (() => {
       `<h3>${projectToDisplay.getTitle()}<button class="add-btn small-btn" data-btn="new-task" data-projectid=${projectID}>＋ Add Task</button></h3>`;
     } else {
       display.innerHTML += 
-      `<h3>${projectToDisplay.getTitle()}<button class="add-btn small-btn add-proj-btn" data-btn="new-task" data-projectid=${projectID}>＋ Add Task</button><button class="add-btn delete-project-btn small-btn" data-btn="edit-project-name" data-projectid=${projectID}><img class="project-trash" src="img/pencil.svg"></button><button class="add-btn delete-project-btn small-btn" data-btn="del-project" data-projectid=${projectID}><img class="project-trash" src="img/trash.svg"></button></h3>`;
+      `<h3>${projectToDisplay.getTitle()}<button class="add-btn small-btn add-proj-btn" data-btn="new-task" data-projectid=${projectID}>＋ Add Task</button><button class="add-btn delete-project-btn small-btn" data-btn="rename-project" data-projectid=${projectID}><img class="project-trash" src="img/pencil.svg"></button><button class="add-btn delete-project-btn small-btn" data-btn="del-project" data-projectid=${projectID}><img class="project-trash" src="img/trash.svg"></button></h3>`;
     }
 
     let projectList = document.createElement('ul');
@@ -282,6 +326,7 @@ const ViewHandler = (() => {
     handleEditTaskClick();
     handleDeleteTaskClick();
     handleMoveTaskClick();
+    handleRenameProjectButtons();
     AllProjects.save();
   }
 
@@ -299,6 +344,7 @@ const ViewHandler = (() => {
     handleEditTaskClick();
     handleDeleteTaskClick();
     handleMoveTaskClick();
+    handleRenameProjectButtons();
     AllProjects.save();
   };
 
