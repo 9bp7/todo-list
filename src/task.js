@@ -25,7 +25,21 @@ const ToDoItem = (title, description, dueDate, priority, notes, checklist) => {
   const getComplete = () => completed;
   const getCompletionDate = () => completionDate;
   const getCreationDate = () => creationDate;
-  return {setComplete, getComplete, getCompletionDate, getCreationDate, setTitle, setDescription, setDueDate, setPriority, setNotes, setChecklist, getTitle, getDescription, getDueDate, getPriority, getNotes, getChecklist};
+  const getJSON = () => {
+    let data = {};
+    data.title = title;
+    data.description = description;
+    data.dueDate = dueDate;
+    data.priority = priority;
+    data.notes = notes;
+    data.checklist = checklist;
+    data.completed = completed;
+    data.completionDate = completionDate;
+    data.creationDate = creationDate;
+    //console.log(JSON.stringify(data));
+    return JSON.stringify(data);
+  }
+  return {getJSON, setComplete, getComplete, getCompletionDate, getCreationDate, setTitle, setDescription, setDueDate, setPriority, setNotes, setChecklist, getTitle, getDescription, getDueDate, getPriority, getNotes, getChecklist};
 };
 
 export {ToDoItem};

@@ -11,7 +11,17 @@ const Project = (title, favourite = false) => {
     }
   }
   const isFavourite = () => favourite;
-  return {addTask, getTask, getTasks, getTitle, deleteTask, isFavourite};
+  const getJSON = () => {
+    let data = {};
+    data.title = title;
+    data.favourite = favourite;
+    data.tasks = [];
+    tasks.forEach(task => {
+      data.tasks.push(JSON.parse(task.getJSON()));
+    })
+    return JSON.stringify(data);
+  }
+  return {getJSON, addTask, getTask, getTasks, getTitle, deleteTask, isFavourite};
 }
 
 export {Project};

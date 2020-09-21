@@ -139,7 +139,6 @@ const FormModal = (modalTitle, submitFunction, cancelFunction, submitBtnText, ca
   initialHTML += `</form>`;
   prototype.modal.innerHTML += initialHTML;
 
-
   const trackButtons = () => {
     //let submitBtn = prototype.modal.querySelector('button[data-modalbtn="submit"]');
     let form = prototype.modal.querySelector('form');

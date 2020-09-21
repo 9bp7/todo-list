@@ -222,6 +222,7 @@ const ViewHandler = (() => {
     handleNewTaskClick();
     handleEditTaskClick();
     handleDeleteTaskClick();
+    AllProjects.save();
   }
 
   const displayAllProjects = () => {
@@ -237,6 +238,7 @@ const ViewHandler = (() => {
     handleNewTaskClick();
     handleEditTaskClick();
     handleDeleteTaskClick();
+    AllProjects.save();
   };
 
   updateDisplay = () => {
