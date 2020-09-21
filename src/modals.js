@@ -34,8 +34,9 @@ const Modal = (modalTitle) => {
   modalContainer.classList.add('modal-container');
   modalContainer.dataset.modalid = modalID;
 
-  document.querySelector('body').appendChild(modalContainer);
-  document.querySelector('.modal-container').appendChild(modal);
+  //document.querySelector('body').appendChild(modalContainer);
+  //document.querySelector('.modal-container').appendChild(modal);
+  modalContainer.appendChild(modal);
 
   if(modalTitle.length > 0) {
     modal.innerHTML += `<h3 id="modal-title">${modalTitle}</h3>`;
@@ -143,9 +144,7 @@ const FormModal = (modalTitle, submitFunction, cancelFunction, submitBtnText, ca
     //let submitBtn = prototype.modal.querySelector('button[data-modalbtn="submit"]');
     let form = prototype.modal.querySelector('form');
     if(form) {
-      console.log('form exists')
       form.addEventListener('submit', e => {
-        console.log('submitted form');
         e.preventDefault();
         let formData = new FormData(form);
         submitFunction(formData);
@@ -175,15 +174,11 @@ const FormModal = (modalTitle, submitFunction, cancelFunction, submitBtnText, ca
   
   const addFormHTML = (formHTML) => {
     let form = prototype.modal.querySelector('form');
+    form.remove();
+    prototype.modal.innerHTML += initialHTML;
+    form = prototype.modal.querySelector('form');
     form.innerHTML = formHTML + form.innerHTML;
 
-
-    /*let modalTitle = prototype.modal.querySelector('h3[id="modal-title"]');
-    let copyModalTitle = modalTitle;
-    modalTitle.remove();
-    prototype.modal.innerHTML = copyModalTitle.innerHTML + 
-                                innerHTML + 
-                                prototype.modal.innerHTML;*/
     trackButtons();
   }
 

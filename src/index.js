@@ -6,7 +6,7 @@ import {AllModals, Modal, PopupModal, ConfirmCancelModal, FormModal} from "./mod
 
 let inboxProject = Project("Inbox", true);
 AllProjects.addProject(inboxProject);
-let toDo = ToDoItem('This is complete first', 'More info about this amazing thing', "2020-09-19", "high", null, null);
+/*let toDo = ToDoItem('This is complete first', 'More info about this amazing thing', "2020-09-19", "high", null, null);
 toDo.setComplete('true');
 inboxProject.addTask(toDo);
 let toDo2 = ToDoItem('Do something amazing', 'More info about this amazing thing', "2020-09-19", "low", null, null);
@@ -17,26 +17,30 @@ inboxProject.addTask(toDo3);
 let toDo4 = ToDoItem('Do another great thing', 'More info about this amazing thing', "2020-09-19", "med", null, null);
 inboxProject.addTask(toDo4);
 let toDo5 = ToDoItem('Do another great thing', 'More info about this amazing thing', "2020-09-19", "med", null, null);
-inboxProject.addTask(toDo5);
+inboxProject.addTask(toDo5);*/
 //ViewHandler.displayProject(0);
 
 
 
 
-//let modalTest = Modal('New Task');
-//let modalTest2 = Modal('Edit Task');
-let myFormModal = FormModal('New Task', addTask, null, 'Add Task', 'Cancel');
+
+/*let myFormModal = FormModal('New Task', addTask, null, 'Add Task', 'Cancel');
 
 function addTask(formData) {
+  let errors = false;
   for (let pair of formData.entries()) {
-    console.log(pair[0] + ': ' + pair[1]);
     if(pair[0] === 'modifytask-name') {
       if(pair[1].length === 0) {
         myFormModal.addErrorLabel('You need to enter a task name!', pair[0]);
+        errors = true;
       } else {
         myFormModal.removeErrorLabel(pair[0]);
       }      
     }
+  }
+
+  if(!errors) {
+
   }
 }
 
@@ -59,7 +63,7 @@ let newTaskHTML =
 
 
 myFormModal.addFormHTML(newTaskHTML);
-myFormModal.show();
+myFormModal.show();*/
 
 //let modalTest3 = ConfirmCancelModal('Delete Project', 'Do you really wish to delete this project?', confirm, cancel, "Delete Project", "Cancel", true);
 //modalTest3.show();

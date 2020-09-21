@@ -1,7 +1,7 @@
 import {ToDoItem} from "./task.js";
 import {Project} from "./project.js";
 import {AllProjects} from "./allProjects.js";
-import {Modal, AllModals, ConfirmCancelModal, NewTaskModal, EditTaskModal, NewProjectModal} from "./modals.js";
+import {Modal, AllModals, ConfirmCancelModal, FormModal, PopupModal} from "./modals.js";
 
 const ViewHandler = (() => {
   let allButtons = document.querySelectorAll("button");
@@ -13,10 +13,149 @@ const ViewHandler = (() => {
   let addingProject = false;
   let currentView = {type: "",
                      projects: []};
+  let updateDisplay;
+  let newTaskModal;
+  let newTaskModalHTML =
+  `<input type="text" id="modifytask-name" name="modifytask-name" placeholder="Task name" tabindex="0">
+    <input type="text" id="modifytask-desc" name="modifytask-desc" placeholder="Description"> 
+    <label for="modifytask-duedate">Due date (optional):</label>   
+    <input type="date" id="modifytask-duedate" name="modifytask-duedate">
+    <label for="modifytask-duedate">Priority:</label>   
+    <select id="modifytask-priority" name="modifytask-priority">
+      <option value="low">Low</option>
+      <option value="med">Medium</option>
+      <option value="high">High</option>
+    </select>
+    <textarea id="modifytask-notes" name="modifytask-notes" rows="3" placeholder="Add additional notes here"></textarea>`;
+  let newTaskProjectID = 0;
+  let editTaskModal;
+  let editTaskProjectID = 0;
+  let editTaskProjectIndex = 0;
 
   const setCurrentView = (type, projects) => {
     currentView.type = type;
     currentView.projects = projects;
+  }
+
+  const handleNewTaskSubmit = (formData) => {
+    let errors = false;
+    let formObjects = {};
+    for (let pair of formData.entries()) {
+      if(pair[0] === 'modifytask-name') {
+        if(pair[1].length === 0) {
+          newTaskModal.addErrorLabel('You need to enter a task name!', pair[0]);
+          errors = true;
+        } else {
+          newTaskModal.removeErrorLabel(pair[0]);
+        }      
+      }
+      formObjects[pair[0]] = pair[1];
+    }
+
+    if(!errors) {
+      let currentProject = AllProjects.getProject(newTaskProjectID);
+      let newToDo = ToDoItem(formObjects['modifytask-name'], formObjects['modifytask-desc'], formObjects['modifytask-duedate'], formObjects['modifytask-priority'], formObjects['modifytask-notes'], null);
+      currentProject.addTask(newToDo);
+      updateDisplay();
+      newTaskModal.hide();
+    }
+  }
+
+  newTaskModal = FormModal('New Task', handleNewTaskSubmit, null, 'Add Task', 'Cancel');
+
+  const handleNewTaskClick = () => {
+    let newTaskBtns = display.querySelectorAll('button[data-btn="new-task"]');
+    newTaskBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        newTaskProjectID = btn.dataset.projectid;
+        newTaskModal.addFormHTML(newTaskModalHTML);
+        newTaskModal.show();
+      });
+    });
+  }
+
+  const handleEditTaskSubmit = (formData) => {
+    let errors = false;
+    let formObjects = {};
+    for (let pair of formData.entries()) {
+      if(pair[0] === 'modifytask-name') {
+        if(pair[1].length === 0) {
+          editTaskModal.addErrorLabel('You need to enter a task name!', pair[0]);
+          errors = true;
+        } else {
+          editTaskModal.removeErrorLabel(pair[0]);
+        }      
+      }
+      formObjects[pair[0]] = pair[1];
+    }
+
+    if(!errors) {
+      let containingProject = AllProjects.getProject(editTaskProjectID);
+      let taskToEdit = containingProject.getTask(editTaskProjectIndex);
+
+      taskToEdit.setTitle(formObjects['modifytask-name']);
+      taskToEdit.setDescription(formObjects['modifytask-desc']);
+      taskToEdit.setDueDate(formObjects['modifytask-duedate']);
+      taskToEdit.setPriority(formObjects['modifytask-priority']);
+      taskToEdit.setNotes(formObjects['modifytask-notes']);
+      updateDisplay();
+      editTaskModal.hide();
+    }
+  }
+
+  editTaskModal = FormModal('Edit Task', handleEditTaskSubmit, null, 'Edit Task', 'Cancel');
+
+  const handleEditTaskClick = () => {
+    let allTaskListItems = document.querySelectorAll('li');
+    allTaskListItems.forEach(listItem => {
+      if(listItem.querySelector('span[data-btn="edit-task"]')) {
+        listItem.querySelector('span[data-btn="edit-task"]').addEventListener('click', () => {
+          editTaskProjectID = +listItem.dataset.projectid;
+          editTaskProjectIndex = +listItem.dataset.projectindex;
+          let containingProject = AllProjects.getProject(editTaskProjectID);
+          let taskToEdit = containingProject.getTask(editTaskProjectIndex);
+          let priority = taskToEdit.getPriority();
+
+          let editTaskModalHTML =
+            `<input type="text" id="modifytask-name" name="modifytask-name" placeholder="Task name" value="${taskToEdit.getTitle()}" tabindex="0">
+              <input type="text" id="modifytask-desc" name="modifytask-desc" value="${taskToEdit.getDescription()}" placeholder="Description"> 
+              <label for="modifytask-duedate">Due date (optional):</label>   
+              <input type="date" id="modifytask-duedate" value="${taskToEdit.getDueDate()}" name="modifytask-duedate">
+              <label for="modifytask-duedate">Priority:</label>   
+              <select id="modifytask-priority" name="modifytask-priority">
+                <option value="low" ${priority === 'low' ? 'selected' : ''}>Low</option>
+                <option value="med" ${priority === 'med' ? 'selected' : ''}>Medium</option>
+                <option value="high" ${priority === 'high' ? 'selected' : ''}>High</option>
+              </select>
+              <textarea id="modifytask-notes" name="modifytask-notes" rows="3" placeholder="Add additional notes here">${taskToEdit.getNotes()}</textarea>`;
+            
+          editTaskModal.addFormHTML(editTaskModalHTML);
+          editTaskModal.show();
+
+          //let myPopup = PopupModal('Edit Task', `Editing ${taskToEdit.getTitle()}`, `Okay`, null);
+          //myPopup.show();
+        });
+      }      
+    });
+  }
+
+  const confirmDeleteTask = (containingProject, taskToDelete) => {
+    containingProject.deleteTask(taskToDelete);
+    updateDisplay();
+  }
+
+  const handleDeleteTaskClick = () => {
+    let allTaskListItems = document.querySelectorAll('li');
+    allTaskListItems.forEach(listItem => {
+      if(listItem.querySelector('span[data-btn="del-task"]')) {
+        listItem.querySelector('span[data-btn="del-task"]').addEventListener('click', () => {
+          let containingProject = AllProjects.getProject(+listItem.dataset.projectid);
+          let taskToDelete = containingProject.getTask(+listItem.dataset.projectindex);
+          let confirmDeletionModal = ConfirmCancelModal(`Delete Task`, `Do you really wish to permanently delete task '${taskToDelete.getTitle()}'?`, () => confirmDeleteTask(containingProject, taskToDelete), null, "Delete Task", "Cancel", true);
+          confirmDeletionModal.show();
+        });
+      }      
+    });
   }
 
   const clearDisplay = () => {
@@ -64,6 +203,8 @@ const ViewHandler = (() => {
         }
       } 
 
+      individualTask.innerHTML += `<p class="todo-editdel"><span class="todo-edit" data-btn="edit-task">Edit</span> <span class="todo-del" data-btn="del-task">Delete</span></p>`;
+
       projectList.appendChild(individualTask);
     }
 
@@ -78,6 +219,9 @@ const ViewHandler = (() => {
     displayProject(projectID);
     handleTaskCheckboxes();
     handleDeleteProjectButtons();
+    handleNewTaskClick();
+    handleEditTaskClick();
+    handleDeleteTaskClick();
   }
 
   const displayAllProjects = () => {
@@ -90,9 +234,13 @@ const ViewHandler = (() => {
 
     handleTaskCheckboxes();
     handleDeleteProjectButtons();
+    handleNewTaskClick();
+    handleEditTaskClick();
+    handleDeleteTaskClick();
   };
 
-  const updateDisplay = () => {
+  updateDisplay = () => {
+    console.log('updating display');
     if(currentView.type === 'all') {
       displayAllProjects();
     } else if (currentView.type === 'one') {
