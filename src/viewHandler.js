@@ -168,7 +168,6 @@ const ViewHandler = (() => {
       formObjects[pair[0]] = pair[1];
     }
 
-    console.log(`from ${moveTaskProjectID} to ${formObjects['movetask-to']}`);
     let projectFrom = AllProjects.getProject(moveTaskProjectID);
     let projectTo = AllProjects.getProject(+formObjects['movetask-to']);
     let task = projectFrom.getTask(moveTaskTaskID);
@@ -223,7 +222,7 @@ const ViewHandler = (() => {
       `<h3>${projectToDisplay.getTitle()}<button class="add-btn small-btn" data-btn="new-task" data-projectid=${projectID}>＋ Add Task</button></h3>`;
     } else {
       display.innerHTML += 
-      `<h3>${projectToDisplay.getTitle()}<button class="add-btn small-btn" data-btn="new-task" data-projectid=${projectID}>＋ Add Task</button><button class="add-btn delete-project-btn small-btn" data-btn="del-project" data-projectid=${projectID}>Delete Project</button></h3>`;
+      `<h3>${projectToDisplay.getTitle()}<button class="add-btn small-btn add-proj-btn" data-btn="new-task" data-projectid=${projectID}>＋ Add Task</button><button class="add-btn delete-project-btn small-btn" data-btn="edit-project-name" data-projectid=${projectID}><img class="project-trash" src="img/pencil.svg"></button><button class="add-btn delete-project-btn small-btn" data-btn="del-project" data-projectid=${projectID}><img class="project-trash" src="img/trash.svg"></button></h3>`;
     }
 
     let projectList = document.createElement('ul');
@@ -445,7 +444,7 @@ const ViewHandler = (() => {
     deleteProjectBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         let project = AllProjects.getProject(+btn.dataset.projectid);
-        let myModal = ConfirmCancelModal(`Delete ${project.getTitle()}`, `Do you really wish to permanently delete your project '${project.getTitle()}'?`, () => confirmDeleteProject(project), null, "Delete Project", "Cancel", true);
+        let myModal = ConfirmCancelModal(`Delete ${project.getTitle()}`, `Do you really wish to permanently delete your project '${project.getTitle()}' and all of its tasks?`, () => confirmDeleteProject(project), null, "Delete Project", "Cancel", true);
         myModal.show();
       });
     });

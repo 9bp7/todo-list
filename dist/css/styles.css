@@ -94,6 +94,10 @@ header {
   box-shadow: 0px -1px 4px -2px #aaa6a6 inset;
 }
 
+.delete-project-btn:first-of-type {
+  margin-left: 10px;
+}
+
 .delete-project-btn {
   /*background-color: rgb(255, 196, 196);
   border: 1px solid #dd8a88;*/
@@ -101,14 +105,21 @@ header {
   background: none;
   border: none;
   margin-left: 2px;
+  opacity: 0.4;
+  padding: 3px;
 }
 
 .delete-project-btn:hover {
   text-decoration: underline;
+  opacity: 1;
 }
 
 .delete-project-btn:active {
   box-shadow: none;
+}
+
+.add-proj-btn {
+  margin-right: 5px;
 }
 
 
@@ -320,6 +331,12 @@ aside h5 {
   color: #8e1a19;
 }
 
+.project-trash {
+  width: 12px;
+  margin-top: -3px;
+}
+
+
 
 
 
@@ -332,6 +349,8 @@ aside h5 {
   top: 0;
   left: 0;
   z-index: 15;
+  bottom: 0;
+  overflow-y: auto;
 
   display: none;
   background: rgba(0, 0, 0, 0.5);
