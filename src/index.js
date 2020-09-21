@@ -4,13 +4,13 @@ import {AllProjects} from "./allProjects.js";
 import {ViewHandler} from "./viewHandler.js";
 import {AllModals, Modal, PopupModal, ConfirmCancelModal, FormModal} from "./modals.js";
 
-localStorage.clear();
-
+//localStorage.clear();
+  
 if(!AllProjects.saveExists()) {
   let inboxProject = Project("Inbox", true);
   AllProjects.addProject(inboxProject);
 } else {
-  //AllProjects.load();
+  AllProjects.load();
 }
 
 ViewHandler.displayAllProjects();

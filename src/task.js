@@ -1,7 +1,7 @@
 const ToDoItem = (title, description, dueDate, priority, notes, checklist) => {
   let completed = false;
   let completionDate = null;
-  const creationDate = Date.now();
+  let creationDate = Date.now();
 
   const setTitle = (newTitle) => title = newTitle;
   const setDescription = (newDescription) => description = newDescription;
@@ -15,6 +15,8 @@ const ToDoItem = (title, description, dueDate, priority, notes, checklist) => {
       completionDate = Date.now();
     }
   };
+  const setCompletionDate = (newCompletionDate) => completionDate = newCompletionDate;
+  const setCreationDate = (newCreationDate) => creationDate = newCreationDate;
 
   const getTitle = () => title;
   const getDescription = () => description;
@@ -39,7 +41,7 @@ const ToDoItem = (title, description, dueDate, priority, notes, checklist) => {
     //console.log(JSON.stringify(data));
     return JSON.stringify(data);
   }
-  return {getJSON, setComplete, getComplete, getCompletionDate, getCreationDate, setTitle, setDescription, setDueDate, setPriority, setNotes, setChecklist, getTitle, getDescription, getDueDate, getPriority, getNotes, getChecklist};
+  return {getJSON, setComplete, getComplete, getCompletionDate, getCreationDate, setCompletionDate, setCreationDate, setTitle, setDescription, setDueDate, setPriority, setNotes, setChecklist, getTitle, getDescription, getDueDate, getPriority, getNotes, getChecklist};
 };
 
 export {ToDoItem};

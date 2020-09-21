@@ -1,3 +1,6 @@
+import {Project} from "./project.js";
+import { ToDoItem } from "./task.js";
+
 const AllProjects = (() => {
   let projects = [];
   const addProject = (project) => projects.push(project);
@@ -23,17 +26,24 @@ const AllProjects = (() => {
     let projectsToSave = [];
     projects.forEach(project => projectsToSave.push(JSON.parse(project.getJSON())));
 
-    // Done, this can be saved officially now
-    console.log(JSON.stringify(projectsToSave));
+    localStorage.setItem('projects', JSON.stringify(projectsToSave))
+    //console.log(JSON.stringify(projectsToSave));
 
 
   }
   const load = () => {
-    // For each project in the parsed JSON string
-    // Create a Project
-    // Then call function in project.js that converts the JSON string to project details
-    // This will also need to call a function in task.js that converts JSON to task details
-
+    let loadedSave = JSON.parse(localStorage.getItem('projects'));
+    loadedSave.forEach(project => {
+      let loadedProject = Project(project.title, project.favourite);
+      addProject(loadedProject);
+      project.tasks.forEach(task => {
+        let loadedToDoItem = ToDoItem(task.title, task.description, task.dueDate, task.priority, task.notes, task.checklist);
+        loadedToDoItem.setComplete(task.completed);
+        loadedToDoItem.setCompletionDate(task.completionDate);
+        loadedToDoItem.setCreationDate(task.creationDate);
+        loadedProject.addTask(loadedToDoItem);
+      });
+    });
   }
   return {addProject, deleteProject, getAllProjects, getProject, getProjectCount, getProjectIndex, saveExists, save, load};
 })();

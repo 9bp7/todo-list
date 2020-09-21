@@ -2,6 +2,7 @@ import {ToDoItem} from "./task.js";
 import {Project} from "./project.js";
 import {AllProjects} from "./allProjects.js";
 import {Modal, AllModals, ConfirmCancelModal, FormModal, PopupModal} from "./modals.js";
+import {format, isPast, addDays} from 'date-fns';
 
 const ViewHandler = (() => {
   let allButtons = document.querySelectorAll("button");
@@ -198,12 +199,19 @@ const ViewHandler = (() => {
         }
   
         if(tasksToDisplay[i].getDueDate() !== "" && tasksToDisplay[i].getDueDate() !== null) {
-          individualTask.innerHTML += 
-            `<p class="todo-desc">Due on ${tasksToDisplay[i].getDueDate()}</p>`;
+          let parsedDate = Date.parse(tasksToDisplay[i].getDueDate());
+          if(isPast(addDays(parsedDate, 1))) {
+            individualTask.innerHTML += 
+            `<p class="todo-desc todo-overdue">${format(Date.parse(tasksToDisplay[i].getDueDate()), 'do LLL')}</p>`;
+        
+          } else {
+            individualTask.innerHTML += 
+            `<p class="todo-desc">${format(Date.parse(tasksToDisplay[i].getDueDate()), 'do LLL')}</p>`;
+          }
         }
       } 
 
-      individualTask.innerHTML += `<p class="todo-editdel"><span class="todo-edit" data-btn="edit-task">Edit</span> <span class="todo-del" data-btn="del-task">Delete</span></p>`;
+      individualTask.innerHTML += `<p class="todo-editdel"><span class="todo-move" data-btn="move-task">Move</span> <span class="todo-edit" data-btn="edit-task">Edit</span> <span class="todo-del" data-btn="del-task">Delete</span></p>`;
 
       projectList.appendChild(individualTask);
     }

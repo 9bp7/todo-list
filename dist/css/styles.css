@@ -287,9 +287,18 @@ aside h5 {
   display: none;
 }
 
+.todo-editdel span {
+  cursor: pointer;
+}
+
 .display-inner li:hover .todo-editdel {
   display: block;
   animation: fadeIn 0.1s;
+}
+
+.todo-move {
+  margin-right: 3px;
+  color: #101e5f;
 }
 
 .todo-edit {
@@ -302,8 +311,13 @@ aside h5 {
 }
 
 .todo-edit:hover,
-.todo-del:hover {
+.todo-del:hover,
+.todo-move:hover {
   text-decoration: underline;
+}
+
+.todo-overdue {
+  color: #8e1a19;
 }
 
 

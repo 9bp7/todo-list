@@ -10,6 +10,7 @@ const Project = (title, favourite = false) => {
       tasks.splice(taskIndex, 1);
     }
   }
+  const setTitle = (newTitle) => title = newTitle;
   const isFavourite = () => favourite;
   const getJSON = () => {
     let data = {};
@@ -21,7 +22,7 @@ const Project = (title, favourite = false) => {
     })
     return JSON.stringify(data);
   }
-  return {getJSON, addTask, getTask, getTasks, getTitle, deleteTask, isFavourite};
+  return {getJSON, addTask, getTask, getTasks, getTitle, deleteTask, isFavourite, setTitle};
 }
 
 export {Project};
