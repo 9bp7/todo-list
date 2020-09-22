@@ -2,22 +2,15 @@ import {ToDoItem} from "./task.js";
 import {Project} from "./project.js";
 import {AllProjects} from "./allProjects.js";
 import {ViewHandler} from "./viewHandler.js";
-import {Modal, NewTaskModal} from "./modals.js";
+import {AllModals, Modal, PopupModal, ConfirmCancelModal, FormModal} from "./modals.js";
 
-let inboxProject = Project("Inbox", true);
-AllProjects.addProject(inboxProject);
-let toDo = ToDoItem('Test', 'More info about the test', null, null, null, null);
-inboxProject.addTask(toDo);
-ViewHandler.displayProject(0);
+//localStorage.clear();
+  
+if(!AllProjects.saveExists()) {
+  let inboxProject = Project("Inbox", true);
+  AllProjects.addProject(inboxProject);
+} else {
+  AllProjects.load();
+}
 
-inboxProject = Project("Personal");
-AllProjects.addProject(inboxProject);
-inboxProject = Project("Work");
-AllProjects.addProject(inboxProject);
-
-//let myModal = Modal("New Task");
-//myModal.show();
-//NewTaskModal.show();
-
-ViewHandler.updateSideBar();
-ViewHandler.trackNewProjectButtons();
+ViewHandler.displayAllProjects();
