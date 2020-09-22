@@ -1,6 +1,12 @@
 const Project = (title, favourite = false) => {
   let tasks = [];
-  const addTask = (task) => tasks.push(task);
+  const addTask = (task, toStart = true) => {
+    if(toStart) {
+      tasks.unshift(task);
+    } else {
+      tasks.push(task);
+    }    
+  }
   const getTask = (position) => tasks[position];
   const getTasks = () => tasks;
   const getTitle = () => title;

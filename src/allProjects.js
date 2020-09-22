@@ -27,9 +27,6 @@ const AllProjects = (() => {
     projects.forEach(project => projectsToSave.push(JSON.parse(project.getJSON())));
 
     localStorage.setItem('projects', JSON.stringify(projectsToSave))
-    //console.log(JSON.stringify(projectsToSave));
-
-
   }
   const load = () => {
     let loadedSave = JSON.parse(localStorage.getItem('projects'));
@@ -41,7 +38,7 @@ const AllProjects = (() => {
         loadedToDoItem.setComplete(task.completed);
         loadedToDoItem.setCompletionDate(task.completionDate);
         loadedToDoItem.setCreationDate(task.creationDate);
-        loadedProject.addTask(loadedToDoItem);
+        loadedProject.addTask(loadedToDoItem, false);
       });
     });
   }
