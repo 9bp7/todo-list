@@ -179,9 +179,6 @@ const ViewHandler = (() => {
             
           editTaskModal.addFormHTML(editTaskModalHTML);
           editTaskModal.show();
-
-          //let myPopup = PopupModal('Edit Task', `Editing ${taskToEdit.getTitle()}`, `Okay`, null);
-          //myPopup.show();
         });
       }      
     });
@@ -306,7 +303,7 @@ const ViewHandler = (() => {
         }
       } 
 
-      individualTask.innerHTML += `<p class="todo-editdel"><span class="todo-move" data-btn="move-task">Move</span> <span class="todo-edit" data-btn="edit-task">Edit</span> <span class="todo-del" data-btn="del-task">Delete</span></p>`;
+      individualTask.innerHTML += `<p class="todo-editdel"><span class="todo-edit" data-btn="edit-task"><img class="todo-trash" src="img/pencil.svg" alt="Edit"></span><span class="todo-move" data-btn="move-task"><img class="todo-trash" src="img/folder.svg" alt="Move"></span><span class="todo-del" data-btn="del-task"><img class="todo-trash" src="img/trash.svg" alt="Delete"></span></p>`;
 
       projectList.appendChild(individualTask);
     }
