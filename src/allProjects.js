@@ -1,4 +1,4 @@
-import {Project} from "./project.js";
+import { Project } from "./project.js";
 import { ToDoItem } from "./task.js";
 
 const AllProjects = (() => {
@@ -9,7 +9,7 @@ const AllProjects = (() => {
     if (projectIndex > -1) {
       projects.splice(projectIndex, 1);
     }
-  }
+  };
   const getAllProjects = () => projects;
   const getProject = (projectID) => {
     return projects[projectID];
@@ -17,32 +17,51 @@ const AllProjects = (() => {
   const getProjectCount = () => projects.length;
   const getProjectIndex = (project) => projects.indexOf(project);
   const saveExists = () => {
-    if(localStorage.getItem('projects')) {
+    if (localStorage.getItem("projects")) {
       return true;
     }
-    return false;    
-  }
+    return false;
+  };
   const save = () => {
     let projectsToSave = [];
-    projects.forEach(project => projectsToSave.push(JSON.parse(project.getJSON())));
+    projects.forEach((project) =>
+      projectsToSave.push(JSON.parse(project.getJSON()))
+    );
 
-    localStorage.setItem('projects', JSON.stringify(projectsToSave))
-  }
+    localStorage.setItem("projects", JSON.stringify(projectsToSave));
+  };
   const load = () => {
-    let loadedSave = JSON.parse(localStorage.getItem('projects'));
-    loadedSave.forEach(project => {
+    let loadedSave = JSON.parse(localStorage.getItem("projects"));
+    loadedSave.forEach((project) => {
       let loadedProject = Project(project.title, project.favourite);
       addProject(loadedProject);
-      project.tasks.forEach(task => {
-        let loadedToDoItem = ToDoItem(task.title, task.description, task.dueDate, task.priority, task.notes, task.checklist);
+      project.tasks.forEach((task) => {
+        let loadedToDoItem = ToDoItem(
+          task.title,
+          task.description,
+          task.dueDate,
+          task.priority,
+          task.notes,
+          task.checklist
+        );
         loadedToDoItem.setComplete(task.completed);
         loadedToDoItem.setCompletionDate(task.completionDate);
         loadedToDoItem.setCreationDate(task.creationDate);
         loadedProject.addTask(loadedToDoItem, false);
       });
     });
-  }
-  return {addProject, deleteProject, getAllProjects, getProject, getProjectCount, getProjectIndex, saveExists, save, load};
+  };
+  return {
+    addProject,
+    deleteProject,
+    getAllProjects,
+    getProject,
+    getProjectCount,
+    getProjectIndex,
+    saveExists,
+    save,
+    load,
+  };
 })();
 
-export {AllProjects};
+export { AllProjects };

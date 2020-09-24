@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/9bp7/todo-list#readme",
   "devDependencies": {
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^6.11.0",
+    "prettier": "2.1.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   },
