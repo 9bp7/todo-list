@@ -39,7 +39,6 @@ const ToDoItem = (title, description, dueDate, priority, notes, checklist) => {
     data.completed = completed;
     data.completionDate = completionDate;
     data.creationDate = creationDate;
-    //console.log(JSON.stringify(data));
     return JSON.stringify(data);
   };
   return {
