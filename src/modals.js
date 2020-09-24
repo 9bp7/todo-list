@@ -14,9 +14,6 @@ const AllModals = (() => {
     for (let i = 0; i < modalToKeep.length; i++) {
       if (i !== modalToKeep) {
         allModals[i].hide();
-        console.log(`hiding modalID: ${i}`);
-      } else {
-        console.log(`keeping modalID: ${i}`);
       }
     }
   };
