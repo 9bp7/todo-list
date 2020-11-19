@@ -165,8 +165,13 @@ aside h5 {
   border-radius: 10px;
 }
 
+.project-link-dummy {
+  pointer-events: none;
+}
+
 .sidebar-projects {
   margin-bottom: 20px;
+  position: relative;
 }
 
 small {

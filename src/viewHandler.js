@@ -453,20 +453,52 @@ const ViewHandler = (() => {
     sideBarProjects.innerHTML = "";
   };
 
+  let dragY = 0;
+  let draggingListItem;
+  let projectsRect;
+  let listItemRect;
+
   const rearrangeProjectDrag = (e) => {
     e.preventDefault();
-    dragging = e.target.dataset.id;
     e.target.classList.add('dragging');
+    draggingListItem.style.top = `${(dragY - projectsRect.top) - (listItemRect.height / 2)}px`;
   }
 
   const rearrangeProjectDragStart = (e) => {
+    dragging = e.target.dataset.id;
     e.target.style.cursor = "grabbing";
-    
+
+    let img = new Image();
+    img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+    event.dataTransfer.setDragImage(img, 0, 0);
+
+    document.ondragover = function(event) {
+        event = event || window.event;
+        dragY = event.clientY;
+    };
+
+    projectsRect = sideBarProjects.getBoundingClientRect();
+    listItemRect = e.target.getBoundingClientRect();
+
+    draggingListItem = document.createElement('li');
+    draggingListItem.classList.add('project-link');
+    draggingListItem.classList.add('project-link-dummy');
+    draggingListItem.classList.add('dragging');
+    draggingListItem.style.position = 'absolute';
+    draggingListItem.style.top = `${(e.clientY - projectsRect.top) - (listItemRect.height / 2)}px`;
+    draggingListItem.style.width = '100%';    
+    draggingListItem.style.opacity = '0.5';
+    draggingListItem.innerText = AllProjects.getProject(dragging).getTitle();
+    sideBarProjects.appendChild(draggingListItem);
   }
 
   const rearrangeProjectDragEnd = (e) => {
     e.target.style.cursor = "default";
     e.target.classList.remove('dragging');
+    let dummyProjectLink = document.querySelector('.project-link-dummy');
+    if(dummyProjectLink) {
+      sideBarProjects.removeChild(dummyProjectLink);
+    }    
   }
 
   const rearrangeProjectDragOver = (e) => {
