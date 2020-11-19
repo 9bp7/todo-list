@@ -34,6 +34,7 @@ const ViewHandler = (() => {
   let moveTaskTaskID = 0;
   let renameProjectModal;
   let renameProjectProjectID = 0;
+  let dragging = 0;
 
   const setCurrentView = (type, projects) => {
     currentView.type = type;
@@ -452,6 +453,40 @@ const ViewHandler = (() => {
     sideBarProjects.innerHTML = "";
   };
 
+  const rearrangeProjectDrag = (e) => {
+    e.preventDefault();
+    dragging = e.target.dataset.id;
+    e.target.classList.add('dragging');
+  }
+
+  const rearrangeProjectDragStart = (e) => {
+    e.target.style.cursor = "grabbing";
+    
+  }
+
+  const rearrangeProjectDragEnd = (e) => {
+    e.target.style.cursor = "default";
+    e.target.classList.remove('dragging');
+  }
+
+  const rearrangeProjectDragOver = (e) => {
+    e.preventDefault();    
+    e.target.classList.add('dragging');
+  }
+
+  const rearrangeProjectDragLeave = (e) => {
+    e.preventDefault();   
+    e.target.classList.remove('dragging');
+  }
+
+  const rearrangeProjectDrop = (e) => {
+    e.preventDefault();
+    let projectToMove = AllProjects.getProject(dragging);
+    AllProjects.setProjectPosition(projectToMove, e.target.dataset.id);
+    showSideBarLinks();
+    updateDisplay();
+  }
+
   const showSideBarLinks = () => {
     let allProjects = AllProjects.getAllProjects();
     let newProjectButtons = document.querySelectorAll(
@@ -460,10 +495,17 @@ const ViewHandler = (() => {
 
     let i = 0;
     allProjects.forEach((project) => {
+      let li = document.createElement('li');
       if (project.isFavourite()) {
         sideBarFavourites.innerHTML += `<li class="project-link" data-id=${i}>${project.getTitle()}</li>`;
       } else {
-        sideBarProjects.innerHTML += `<li class="project-link" data-id=${i}>${project.getTitle()}</li>`;
+        li.draggable = true;        
+        li.innerText = project.getTitle();
+        li.dataset.id = i;
+        li.classList.add('project-link');
+        sideBarProjects.appendChild(li);
+       
+        //sideBarProjects.innerHTML += `<li class="project-link" data-id=${i}>${project.getTitle()}</li>`;
       }
       i++;
     });
@@ -513,6 +555,14 @@ const ViewHandler = (() => {
         addingProject = false;
         updateSideBar();
       });
+      if (link.draggable) {
+        link.addEventListener('drag', rearrangeProjectDrag);
+        link.addEventListener('dragstart', rearrangeProjectDragStart);
+        link.addEventListener('dragend', rearrangeProjectDragEnd);
+        link.addEventListener('dragover', rearrangeProjectDragOver);
+        link.addEventListener('dragleave', rearrangeProjectDragLeave);
+        link.addEventListener('drop', rearrangeProjectDrop);
+      }
     });
   };
 

@@ -9,13 +9,20 @@ const AllProjects = (() => {
     if (projectIndex > -1) {
       projects.splice(projectIndex, 1);
     }
-  };
+  };  
   const getAllProjects = () => projects;
   const getProject = (projectID) => {
     return projects[projectID];
   };
   const getProjectCount = () => projects.length;
   const getProjectIndex = (project) => projects.indexOf(project);
+  const setProjectPosition = (projectToMove, newIndex) => {
+    let currentIndex = getProjectIndex(projectToMove);
+    projects.splice(currentIndex, 1);
+    console.log(projects);
+    projects.splice(newIndex, 0, projectToMove);
+    console.log(projects)
+  };
   const saveExists = () => {
     if (localStorage.getItem("projects")) {
       return true;
@@ -58,6 +65,7 @@ const AllProjects = (() => {
     getProject,
     getProjectCount,
     getProjectIndex,
+    setProjectPosition,
     saveExists,
     save,
     load,
