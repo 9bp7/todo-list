@@ -453,6 +453,10 @@ const ViewHandler = (() => {
     sideBarProjects.innerHTML = "";
   };
 
+
+
+  /* Sidebar Drag to Reorder Handling */
+
   let dragY = 0;
   let draggingListItem;
   let projectsRect;
@@ -460,7 +464,6 @@ const ViewHandler = (() => {
 
   const rearrangeProjectDrag = (e) => {
     e.preventDefault();
-    e.target.classList.add('dragging');
     draggingListItem.style.top = `${(dragY - projectsRect.top) - (listItemRect.height / 2)}px`;
   }
 
@@ -494,7 +497,6 @@ const ViewHandler = (() => {
 
   const rearrangeProjectDragEnd = (e) => {
     e.target.style.cursor = "default";
-    e.target.classList.remove('dragging');
     let dummyProjectLink = document.querySelector('.project-link-dummy');
     if(dummyProjectLink) {
       sideBarProjects.removeChild(dummyProjectLink);
@@ -518,6 +520,9 @@ const ViewHandler = (() => {
     showSideBarLinks();
     updateDisplay();
   }
+
+  /* End */
+
 
   const showSideBarLinks = () => {
     let allProjects = AllProjects.getAllProjects();
