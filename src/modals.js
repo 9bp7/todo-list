@@ -21,7 +21,7 @@ const AllModals = (() => {
   return { addModal, getModalIndex, hideAllOtherModals };
 })();
 
-const Modal = (modalTitle) => {
+const Modal = (modalTitle, canBeDismissed = true) => {
   let modal = document.createElement("div");
   modal.classList.add("modal");
   modal.dataset.modalid = AllModals.addModal(modal);
@@ -55,7 +55,9 @@ const Modal = (modalTitle) => {
         e.target.classList.contains("modal-container") ||
         e.target.id === "modal-close"
       ) {
-        hide();
+        if(canBeDismissed) {
+          hide();
+        }        
       }
     });
   };
@@ -117,9 +119,10 @@ const PopupModal = (
   modalTitle,
   modalContent,
   okBtnText = "",
-  okBtnFunction = null
+  okBtnFunction = null,
+  canBeDismissed = true
 ) => {
-  const prototype = Modal(modalTitle);
+  const prototype = Modal(modalTitle, canBeDismissed);
   if (modalContent.length > 0) {
     prototype.modal.innerHTML += `<p>${modalContent}</p>`;
   }

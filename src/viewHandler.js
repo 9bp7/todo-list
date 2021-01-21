@@ -390,7 +390,7 @@ const ViewHandler = (() => {
     handleDeleteTaskClick();
     handleMoveTaskClick();
     handleRenameProjectButtons();
-    AllProjects.save();
+    //AllProjects.save();
   };
 
   const displayAllProjects = () => {
@@ -408,7 +408,7 @@ const ViewHandler = (() => {
     handleDeleteTaskClick();
     handleMoveTaskClick();
     handleRenameProjectButtons();
-    AllProjects.save();
+    //AllProjects.save();
   };
 
   updateDisplay = () => {

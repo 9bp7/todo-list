@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "gh-pages -d dist",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -16,15 +18,17 @@
   "bugs": {
     "url": "https://github.com/9bp7/todo-list/issues"
   },
-  "homepage": "https://github.com/9bp7/todo-list#readme",
+  "homepage": "https://9bp7.github.io/todo-list",
   "devDependencies": {
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^6.11.0",
+    "gh-pages": "^3.1.0",
     "prettier": "2.1.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "date-fns": "^2.16.1"
+    "date-fns": "^2.16.1",
+    "firebase": "^8.2.4"
   }
 }
