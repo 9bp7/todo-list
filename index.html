@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <title>DoTick - Get Things Done</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="wrap">
+        <p>DoTick✓</p>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap">
+        <aside>
+          <ul class="sidebar-favourites">
+            <!--
+              <li>Today</li>
+              <li>Next 7 Days</li>-->
+            <li id="sidebar-alltasks">View All Tasks</li>
+          </ul>
+
+          <h5>
+            Projects
+            <button class="add-btn small-btn" data-btn="new-project">
+              ＋ New Project
+            </button>
+          </h5>
+
+          <small style="margin: 15px 0 15px 10px;">✱ &nbsp;Drag projects to reorder</small>
+
+          <ul class="sidebar-projects"></ul>
+        </aside>
+
+        <section class="display">
+          <div class="display-inner"></div>
+        </section>
+      </div>
+    </main>
+  </body>
+
+  <script src="main.js"></script>
+</html>
