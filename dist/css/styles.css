@@ -69,6 +69,10 @@ header {
   MAIN AREA
 ***/
 
+main {
+  position: relative;
+}
+
 .small-btn {
   border-radius: 20px;
   border: none;
@@ -378,7 +382,7 @@ small {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 15;
+  z-index: 14;
   bottom: 0;
   overflow-y: auto;
 
@@ -535,6 +539,15 @@ small {
   margin-top: -5px;
   margin-left: 3px;
   margin-bottom: -2px;
+}
+
+
+.sign-in {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+  z-index: 15;
 }
 
 /* TASK MODAL 
